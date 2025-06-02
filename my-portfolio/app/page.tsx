@@ -247,6 +247,40 @@ const MailLink = styled.a`
   }
 `;
 
+const AnimatedCircleSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2.5rem 0 2.5rem 0;
+`;
+
+const CircleWrapper = styled.div`
+  width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const RotatingCircle = styled.svg`
+  width: 320px;
+  height: 320px;
+  transform-box: fill-box;
+  animation: rotate 4s linear infinite;
+  @keyframes rotate {
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+const CircleCaption = styled.div`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.05rem;
+  color: #444;
+  margin-top: 1.1rem;
+  text-align: center;
+`;
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -300,7 +334,7 @@ export default function Home() {
                 <TopNavLink>education</TopNavLink>
                 <TopNavLink href="/projects">projects</TopNavLink>
                 <TopNavLink>experience</TopNavLink>
-                <TopNavLink href="#contact" onClick={e => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}>contact</TopNavLink>
+                <TopNavLink href="/about">about</TopNavLink>
               </TopNav>
               <Main>
                 <ImagePlaceholder>Image Placeholder</ImagePlaceholder>
@@ -314,6 +348,14 @@ feel free to reach out for projects, research, brainstorming, or just to say hi.
 
 talk soon,`}
                 </Intro>
+                <AnimatedCircleSection>
+                  <CircleWrapper>
+                    <RotatingCircle viewBox="0 0 180 180">
+                      <circle cx="90" cy="90" r="80" stroke="#222" strokeWidth="3" fill="none" strokeDasharray="502" strokeDashoffset="0" />
+                    </RotatingCircle>
+                  </CircleWrapper>
+                  <CircleCaption>life in motion</CircleCaption>
+                </AnimatedCircleSection>
               </Main>
               <ContactSection id="contact">
                 <ContactTitle>contact me</ContactTitle>
