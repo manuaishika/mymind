@@ -122,7 +122,7 @@ const LoaderOverlay = styled.div<{$visible: boolean}>`
   inset: 0;
   width: 100vw;
   height: 100vh;
-  background: #111;
+  background: #EDE8D0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -133,7 +133,7 @@ const LoaderOverlay = styled.div<{$visible: boolean}>`
 `;
 
 const LoaderText = styled.div`
-  color: #fff;
+  color: #222;
   font-family: 'Roboto Mono', monospace;
   font-size: 2rem;
   margin-bottom: 2.5rem;
@@ -267,7 +267,7 @@ const RotatingCircle = styled.svg`
   width: 320px;
   height: 320px;
   transform-box: fill-box;
-  animation: rotate 4s linear infinite;
+  animation: rotate 20s linear infinite;
   @keyframes rotate {
     100% { transform: rotate(360deg); }
   }
@@ -281,47 +281,69 @@ const CircleCaption = styled.div`
   text-align: center;
 `;
 
+const BlogLink = styled.a`
+  position: absolute;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  color: #222;
+  text-decoration: none;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: #444;
+    text-decoration: underline;
+  }
+`;
+
+const blogLinks = [
+  { title: "ML & Quantum", angle: 0, href: "/blog/1" },
+  { title: "Neural Networks", angle: 72, href: "/blog/2" },
+  { title: "AI in Healthcare", angle: 144, href: "/blog/3" },
+  { title: "Research", angle: 216, href: "/blog" },
+  { title: "Innovation", angle: 288, href: "/blog" }
+];
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [catGif, setCatGif] = useState(CAT_GIF_MAIN);
 
   useEffect(() => {
-    let frame = 0;
-    const totalFrames = 30; // 3 seconds, 30 frames (100ms per frame)
-    const interval = setInterval(() => {
-      frame++;
-      setProgress((frame / totalFrames) * 100);
-      if (frame >= totalFrames) {
-        clearInterval(interval);
-        setTimeout(() => setLoading(false), 400); // allow fade out
-      }
-    }, 100);
-    return () => clearInterval(interval);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 30);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(progressInterval);
+    };
   }, []);
 
   return (
     <>
       <Head>
-        <title>Aishika Manu</title>
-        <meta name="description" content="Aishika Manu Portfolio" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700&display=swap" rel="stylesheet" />
+        <title>Aishika | Portfolio</title>
+        <meta name="description" content="Aishika's Portfolio" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <GlobalStyle />
-      {loading && (
-        <LoaderOverlay $visible={loading}>
-          <LoaderText>THIS WEBSITE IS BUILT ON HAPPY ENERGY</LoaderText>
-          <ProgressBarContainer>
-            <ProgressBar $progress={progress} />
-            <CatGif
-              src={catGif}
-              alt="Jumping Cat"
-              $progress={progress}
-              onError={() => setCatGif(CAT_GIF_FALLBACK)}
-            />
-          </ProgressBarContainer>
-        </LoaderOverlay>
-      )}
+      <LoaderOverlay $visible={loading}>
+        <LoaderText>there's nothing like too much ambition. enjoy the joyride of your potential</LoaderText>
+        <ProgressBarContainer>
+          <CatGif src={CAT_GIF_MAIN} alt="Loading..." $progress={progress} />
+          <ProgressBar $progress={progress} />
+        </ProgressBarContainer>
+      </LoaderOverlay>
       {!loading && (
         <>
           <PageWrapper>
@@ -331,10 +353,9 @@ export default function Home() {
             </SideLinks>
             <ContentContainer>
               <TopNav>
-                <TopNavLink>education</TopNavLink>
-                <TopNavLink href="/projects">projects</TopNavLink>
-                <TopNavLink>experience</TopNavLink>
                 <TopNavLink href="/about">about</TopNavLink>
+                <TopNavLink href="/projects">projects</TopNavLink>
+                <TopNavLink href="/blog">blog</TopNavLink>
               </TopNav>
               <Main>
                 <ImagePlaceholder>Image Placeholder</ImagePlaceholder>
@@ -352,6 +373,20 @@ talk soon,`}
                   <CircleWrapper>
                     <RotatingCircle viewBox="0 0 180 180">
                       <circle cx="90" cy="90" r="80" stroke="#222" strokeWidth="3" fill="none" strokeDasharray="502" strokeDashoffset="0" />
+                      {blogLinks.map((link, index) => (
+                        <BlogLink
+                          key={index}
+                          href={link.href}
+                          style={{
+                            left: `${90 + 80 * Math.cos((link.angle * Math.PI) / 180)}px`,
+                            top: `${90 + 80 * Math.sin((link.angle * Math.PI) / 180)}px`,
+                            transform: `translate(-50%, -50%) rotate(${link.angle}deg)`,
+                            transformOrigin: 'center'
+                          }}
+                        >
+                          {link.title}
+                        </BlogLink>
+                      ))}
                     </RotatingCircle>
                   </CircleWrapper>
                   <CircleCaption>life in motion</CircleCaption>
