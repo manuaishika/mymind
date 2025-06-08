@@ -363,15 +363,17 @@ export default function Home() {
           { icon: <span role="img" aria-label="pencil">📝</span>, key: "pencil" },
         ].map((item, i) => (
           item.link ? (
-            <Link href={item.link} key={item.key} passHref legacyBehavior>
+            <Link href={item.link} key={item.key}>
               <TopNavIcon
-                as="a"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.5, delay: i * 0.13 }}
                 title="Skillset"
+                tabIndex={0}
+                role="button"
+                style={{ background: "none", border: "none" }}
               >
                 {item.icon}
               </TopNavIcon>
