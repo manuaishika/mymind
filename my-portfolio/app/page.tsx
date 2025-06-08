@@ -1,8 +1,9 @@
 "use client";
 import Head from "next/head";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const Sidebar = styled.aside`
   position: fixed;
@@ -303,6 +304,45 @@ const SocialIconLink = styled.a`
   }
 `;
 
+// Blinking dot animation
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+`;
+
+const BlinkingDot = styled.div`
+  width: 18px;
+  height: 18px;
+  background: #FFD600;
+  border-radius: 50%;
+  margin-bottom: 1.2rem;
+  margin-left: 2px;
+  animation: ${blink} 1.2s infinite;
+  box-shadow: 0 0 12px 2px #FFD60055;
+`;
+
+const TimelineWrapper = styled.div`
+  position: relative;
+  padding-left: 38px;
+  margin-left: 10px;
+  &:before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #232323;
+    border-radius: 2px;
+    z-index: 0;
+  }
+`;
+
+const TimelineItemWithDot = styled(TimelineItem)`
+  position: relative;
+  margin-bottom: 2.5rem;
+`;
+
 export default function Home() {
   const typewriter = useTypewriter(roles);
   return (
@@ -319,19 +359,35 @@ export default function Home() {
           { icon: <span role="img" aria-label="home">🏠</span>, key: "home" },
           { icon: <span role="img" aria-label="folder">📁</span>, key: "folder" },
           { icon: <span role="img" aria-label="briefcase">💼</span>, key: "briefcase" },
-          { icon: <span role="img" aria-label="wrench">🔧</span>, key: "wrench" },
+          { icon: <span role="img" aria-label="wrench">🔧</span>, key: "wrench", link: "/skills" },
           { icon: <span role="img" aria-label="pencil">📝</span>, key: "pencil" },
         ].map((item, i) => (
-          <TopNavIcon
-            key={item.key}
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 }
-            }}
-            transition={{ duration: 0.5, delay: i * 0.13 }}
-          >
-            {item.icon}
-          </TopNavIcon>
+          item.link ? (
+            <Link href={item.link} key={item.key} passHref legacyBehavior>
+              <TopNavIcon
+                as="a"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.5, delay: i * 0.13 }}
+                title="Skillset"
+              >
+                {item.icon}
+              </TopNavIcon>
+            </Link>
+          ) : (
+            <TopNavIcon
+              key={item.key}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, delay: i * 0.13 }}
+            >
+              {item.icon}
+            </TopNavIcon>
+          )
         ))}
       </TopNavBar>
       <Layout>
@@ -386,55 +442,76 @@ i'm aishika, someone who can't quite sit still in just one tech lane (its the ad
 feel free to reach out for projects, research, brainstorming, or just to say hi. 
 talk soon. take care.`}</AboutText>
             <SectionSpacer />
-            <SectionTitle>Education</SectionTitle>
-            <Timeline>
-              <TimelineItem>
-                <TimelineTitle>Indian Institute of Technology, Bombay</TimelineTitle>
-                <TimelineSubtitle>B.Tech in Computer Science</TimelineSubtitle>
-                <TimelineDate>2021 – 2025</TimelineDate>
-              </TimelineItem>
-              <TimelineItem>
-                <TimelineTitle>Delhi Public School</TimelineTitle>
-                <TimelineSubtitle>High School, Science</TimelineSubtitle>
-                <TimelineDate>2019 – 2021</TimelineDate>
-              </TimelineItem>
-            </Timeline>
-            <SectionSpacer />
             <SectionTitle>Experience</SectionTitle>
-            <Timeline>
-              <TimelineItem>
-                <TimelineTitle>Software Engineering Intern</TimelineTitle>
-                <TimelineSubtitle>Google</TimelineSubtitle>
-                <TimelineDate>May 2024 – July 2024</TimelineDate>
-                <TimelineDesc>
-                  <li>Worked on scalable backend systems for Google Search.</li>
-                  <li>Improved query performance by 15%.</li>
-                </TimelineDesc>
-              </TimelineItem>
-              <TimelineItem>
-                <TimelineTitle>Research Intern</TimelineTitle>
-                <TimelineSubtitle>Microsoft Research</TimelineSubtitle>
-                <TimelineDate>Dec 2023 – Feb 2024</TimelineDate>
-                <TimelineDesc>
-                  <li>Developed ML models for document understanding.</li>
-                  <li>Published a paper at NeurIPS 2024.</li>
-                </TimelineDesc>
-              </TimelineItem>
-            </Timeline>
-            <SectionSpacer />
-            <SectionTitle>Skillset</SectionTitle>
-            <CardsGrid>
-              <Card><CardTitle>Python</CardTitle></Card>
-              <Card><CardTitle>TensorFlow</CardTitle></Card>
-              <Card><CardTitle>PyTorch</CardTitle></Card>
-              <Card><CardTitle>React</CardTitle></Card>
-              <Card><CardTitle>Next.js</CardTitle></Card>
-              <Card><CardTitle>Node.js</CardTitle></Card>
-              <Card><CardTitle>Pandas</CardTitle></Card>
-              <Card><CardTitle>SQL</CardTitle></Card>
-              <Card><CardTitle>Git</CardTitle></Card>
-              <Card><CardTitle>Framer Motion</CardTitle></Card>
-            </CardsGrid>
+            <TimelineWrapper>
+              {[
+                {
+                  title: "Research Intern",
+                  subtitle: "Carnegie Mellon University",
+                  date: "May 2025– Present | Remote",
+                  desc: [
+                    "Develop a parameter-efficient PyTorch STN to align MNIST digits for cryo-ET model adaptation, achieving 0.1873 validation loss using data augmentation and StepLR.",
+                    "Enhance localization network (16→32 filters) and fix visualization to ensure consistent transformations and robust subtomogram alignment."
+                  ]
+                },
+                {
+                  title: "Research Intern",
+                  subtitle: "International Institute of Information Technology, Hyderabad",
+                  date: "March 2025– Present | Hybrid",
+                  desc: [
+                    "Investigate Bayesian Deep Learning using Monte Carlo Dropout, Variational Inference, and BNNs to quantify predictive uncertainty and enhance robustness in noisy environments.",
+                    "Extend to Multimodal AI by fusing audio-visual inputs using cross-modal transformers and probabilistic fusion layers for reliable inference under ambiguous or missing modality scenarios."
+                  ]
+                },
+                {
+                  title: "Research Consultant",
+                  subtitle: "WorldQuant",
+                  date: "March 2025– Present | Remote",
+                  desc: [
+                    "Designed alpha-generating strategies using Regression, PCA, K-Means, optimizing returns across diverse market data."
+                  ]
+                },
+                {
+                  title: "Mentee",
+                  subtitle: "LinkedIn CoachIn",
+                  date: "February 2025– Present | Online Mentorship",
+                  desc: [
+                    "Selected among the top 60 of 22,000+ applicants for a national mentorship by LinkedIn India."
+                  ]
+                },
+                {
+                  title: "Research Intern",
+                  subtitle: "Defence Research and Development Organisation (DRDO)",
+                  date: "Dec 2024– Mar 2025",
+                  desc: [
+                    "Achieved 78% accuracy in irrigation scheduling using ensemble ML; reduced water use by 27% for jute crops."
+                  ]
+                },
+                {
+                  title: "App Development Intern",
+                  subtitle: "NTPC Ltd.",
+                  date: "May 2024– July 2024",
+                  desc: [
+                    "Developed a dashboard to track 100+ SDG-linked initiatives using geo-tagging and real-time analytics"
+                  ]
+                },
+                {
+                  title: "Indira Gandhi Delhi Technical University for Women, New Delhi",
+                  subtitle: "",
+                  date: "Aug. 2023– Present",
+                  desc: []
+                }
+              ].map((exp, idx) => (
+                <TimelineItemWithDot key={exp.title + idx}>
+                  <TimelineTitle>{exp.title}</TimelineTitle>
+                  <TimelineSubtitle>{exp.subtitle}</TimelineSubtitle>
+                  <TimelineDate>{exp.date}</TimelineDate>
+                  <TimelineDesc>
+                    {exp.desc.map((d, i) => <li key={i}>{d}</li>)}
+                  </TimelineDesc>
+                </TimelineItemWithDot>
+              ))}
+            </TimelineWrapper>
           </Section>
         </Main>
       </Layout>
